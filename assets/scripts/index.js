@@ -1,5 +1,3 @@
-console.log(`this is linked!`);
-
 /* CREATE PAGE */
 // create form fields
 const $startDateInput = $(`#startDate`);
