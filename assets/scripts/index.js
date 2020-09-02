@@ -64,3 +64,19 @@ const getLocationById = (woeid) => {
       console.log(error);
     });
 };
+
+/**
+ * Gets the packing list from storage
+ * @returns {Array<Packing-Item>}
+ */
+const getPackingListFromStorage = () => {
+    return JSON.parse(localStorage.getItem('packing-list'))
+}
+
+/**
+ * Saves the list to localStorage
+ * @param list 
+ */
+const savePackingListToStorage = (list) => {
+    localStorage.setItem('packing-list', JSON.stringify(list));
+}
