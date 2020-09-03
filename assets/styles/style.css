@@ -1,0 +1,48 @@
+/* Global/Utils ******************************/
+:root {
+  --color-darker-blue: #004d99;
+  --color-dark-blue: #06c;
+  --color-med-blue: #4d88b3;
+  --color-blue-green: #80b3aa;
+  --color-light-green: #9c9;
+  --color-light-yellow: #ff8;
+  --color-med-yellow: #f6f634;
+  --color-dark-yellow: #cccc00;
+
+  --color-near-white: #efefef;
+  --color-light-gray: #ccc;
+  --color-med-gray: #595959;
+  --color-dark-gray: #444;
+  --color-near-black: #212121;
+
+  --border-radius-sm: 0.5rem;
+  --border-radius-md: 1rem;
+  --border-radius-lg: 3rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  color: var(--color-near-black);
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-dark-gray);
+}
+
+
+.container {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+
