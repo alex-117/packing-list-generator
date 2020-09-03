@@ -81,3 +81,32 @@ h6 {
 .jumbotron__action-btn:hover {
   background-color: var(--color-darker-blue);
 }
+
+.hyperlinks__link-wrap {
+  align-items: center;
+  border: 3px solid var(--color-dark-blue);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  display: flex;
+  flex-flow: column;
+  margin: 10px 5px;
+  padding: 1rem;
+  transition: 0.2s;
+}
+
+.hyperlinks__link-wrap:hover {
+  opacity: 0.6;
+}
+
+.hyperlinks__link-img {
+  background: url('../images/to-do-list.png') center center no-repeat;
+  background-size: cover;
+  height: 4rem;
+  margin-bottom: 0.5rem;
+  width: 4rem;
+}
+
+.hyperlinks__link {
+  font-size: 1.1rem;
+  text-decoration: none;
+}
