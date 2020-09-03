@@ -1,45 +1,4 @@
 /* Global/Utils ******************************/
-:root {
-  --color-darker-blue: #004d99;
-  --color-dark-blue: #06c;
-  --color-med-blue: #4d88b3;
-  --color-blue-green: #80b3aa;
-  --color-light-green: #9c9;
-  --color-light-yellow: #ff8;
-  --color-med-yellow: #f6f634;
-  --color-dark-yellow: #cccc00;
-
-  --color-near-white: #efefef;
-  --color-light-gray: #ccc;
-  --color-med-gray: #595959;
-  --color-dark-gray: #444;
-  --color-near-black: #212121;
-
-  --border-radius-sm: 0.5rem;
-  --border-radius-md: 1rem;
-  --border-radius-lg: 3rem;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  color: var(--color-near-black);
-  font-family: "Poppins", sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: var(--color-dark-gray);
-}
-
-
 .container {
   margin: 0 auto;
   max-width: 1024px;
@@ -47,16 +6,16 @@ h6 {
 
 /* Landing ******************************/
 .jumbotron {
-  background-color: var(--color-light-yellow);
-  border: 3px solid var(--color-light-yellow);
-  border-radius: var(--border-radius-sm);
+  background-color: yellow;
+  border: 3px solid yellow;
+  border-radius: 3px;
   margin: 25px 5px;
   padding: .8rem;
 }
 
 .jumbotron__header {
   text-decoration: underline;
-  text-decoration-color: var(--color-dark-gray);
+  text-decoration-color: gray;
 }
 
 .jumbotron__main-text {
@@ -65,10 +24,10 @@ h6 {
 }
 
 .jumbotron__action-btn {
-  background-color: var(--color-dark-blue);
+  background-color: blue;
   border: none;
-  border-radius: var(--border-radius-sm);
-  color: var(--color-near-white);
+  border-radius: 3px;
+  color: white;
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
@@ -79,13 +38,13 @@ h6 {
 }
 
 .jumbotron__action-btn:hover {
-  background-color: var(--color-darker-blue);
+  background-color: blue;
 }
 
 .hyperlinks__link-wrap {
   align-items: center;
-  border: 3px solid var(--color-dark-blue);
-  border-radius: var(--border-radius-sm);
+  border: 3px solid blue;
+  border-radius: 3px;
   cursor: pointer;
   display: flex;
   flex-flow: column;
