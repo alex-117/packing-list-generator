@@ -1,7 +1,254 @@
 /* Global/Utils ******************************/
+:root {
+  --color-darker-blue: #004d99;
+  --color-dark-blue: #06c;
+  --color-med-blue: #4d88b3;
+  --color-blue-green: #80b3aa;
+  --color-light-yellow: #ff8;
+  --color-med-yellow: #f6f634;
+  --color-dark-yellow: #cccc00;
+  
+  --color-success-light: #9c9;
+  --color-success-dark: #4dcc4d;
+  --color-error-light: #ffbfbf;
+  --color-error-dark: #e66060;
+
+  --color-near-white: #efefef;
+  --color-light-gray: #ccc;
+  --color-med-gray: #595959;
+  --color-dark-gray: #444;
+  --color-near-black: #212121;
+
+  --border-radius-sm: 0.5rem;
+  --border-radius-md: 1rem;
+  --border-radius-lg: 3rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  color: var(--color-near-black);
+}
+
 .container {
+  width: 1200px;
+  max-width: 92%;
   margin: 0 auto;
-  max-width: 1024px;
+}
+
+/* Purely Aesthetic ******************************/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-dark-gray);
+}
+
+::selection {
+  background: var(--color-med-yellow);
+  color: var(--color-near-black);
+}
+
+::-webkit-scrollbar-track {
+  background: white;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-dark-blue);
+}
+
+.brand {
+  font-weight: 600;
+  color: var(--color-dark-blue);
+}
+
+.corner__fold--yellow {
+  position: relative;
+}
+
+.corner__fold--yellow::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-width: 0 1.5rem 1.5rem 0;
+  border-style: solid;
+  border-color: var(--color-med-yellow) white;
+  transition: border-width 0.2s;
+}
+
+.corner__fold--yellow:hover::before {
+  border-width: 0 2rem 2rem 0;
+}
+
+/* Header ******************************/
+header {
+  background-color: white;
+  color: var(--color-dark-blue);
+}
+
+header nav ul {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+header h1 a:link,
+header h1 a:visited {
+  color: var(--color-dark-blue);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+header h1 a:hover,
+header h1 a:focus {
+  outline: none;
+  background-color: var(--color-med-yellow);
+}
+
+/* Top Navigation ******************************/
+header nav ul li:not(:last-child) {
+  margin-right: 3rem;
+}
+
+header nav ul li a:link,
+header nav ul li a:visited {
+  color: var(--color-dark-blue);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+header nav ul li a:hover,
+header nav ul li a:focus {
+  outline: none;
+  border-color: var(--color-med-yellow);
+}
+
+/* Footer ******************************/
+footer {
+  margin: 1rem 0;
+  font-size: 0.8rem;
+}
+
+footer a:link,
+footer a:visited {
+  color: var(--color-dark-blue);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+footer a:hover,
+footer a:focus {
+  outline: none;
+  border-color: var(--color-med-yellow);
+}
+
+footer .copyright {
+  text-align: right;
+}
+
+/* Create Form ******************************/
+form.form__create {
+  padding: 2rem 3rem;
+  background-color: var(--color-light-yellow);
+}
+
+form.form__create .form__fields .form__grid:not(:last-child) {
+  padding-right: 1rem;
+}
+
+form.form__create .form__fields .form__grid > * {
+  height: 100%;
+}
+
+form.form__create .form__fields .form__field {
+  padding: 1rem;
+  border: 2px solid var(--color-med-yellow);
+  border-radius: var(--border-radius-sm);
+  background-color: white;
+  transition: all 0.2s;
+}
+
+form.form__create .form__fields .form__field:hover, 
+form.form__create .form__fields .form__field:focus {
+  border-color: var(--color-med-blue);
+}
+
+form.form__create .form__fields .form__field:hover > input, 
+form.form__create .form__fields .form__field:focus > input, 
+form.form__create .form__fields .form__field:hover > select, 
+form.form__create .form__fields .form__field:focus > select {
+  border-color: var(--color-dark-blue);
+}
+
+form.form__create .form__fields .form__field .form__field--label {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  color: var(--color-med-gray);
+  font-size: 0.8rem;
+}
+
+form.form__create .form__fields .form__field input, 
+form.form__create .form__fields .form__field select {
+  width: 100%;
+  padding: 0.2rem 0 0.5rem 0;
+  border: 0;
+  border-bottom: 2px solid var(--color-light-gray);
+  line-height: 1.5;
+  transition: all 0.2s;
+}
+
+form.form__create .form__fields .form__field input[type=date]:invalid {
+  border-color: var(--color-error-dark);
+}
+
+form.form__create .form__fields .form__field input:hover:invalid, 
+form.form__create .form__fields .form__field select:hover:invalid,
+form.form__create .form__fields .form__field input:focus:invalid, 
+form.form__create .form__fields .form__field select:focus:invalid{
+  border-color: var(--color-error-dark);
+}
+
+form.form__create .form__fields .form__field input:hover, 
+form.form__create .form__fields .form__field select:hover,
+form.form__create .form__fields .form__field input:focus, 
+form.form__create .form__fields .form__field select:focus{
+  outline: 0;
+  border-color: var(--color-dark-blue);
+}
+
+form.form__create .form__fields .btn__submit {
+  position: relative;
+  height: calc(100% - 4px);
+  width: 100%;
+  padding: 1rem 0;
+  border: 0;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-dark-blue);
+  color: white;
+  box-shadow: var(--color-darker-blue) 0 4px 0 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+form.form__create .form__fields .btn__submit:hover, 
+form.form__create .form__fields .btn__submit:focus {
+  outline: 0;
+  background-color: var(--color-darker-blue);
+  box-shadow: var(--color-near-black) 0 2px 0 0;
+  transform: translateY(2px);
 }
 
 /* Landing ******************************/
