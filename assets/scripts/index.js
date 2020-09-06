@@ -57,9 +57,7 @@ $createBtn.click((e) => {
   const endDateValue = $endDateInput.val();
   const destinationValue = $destinationInput.val();
   const typeValue = $('#type').val();
-
   const queryUrl = `${url}/location/search/?query=${destinationValue}`;
-
 
   // getLocationByDay (need to set up still, /api/location/(woeid)/(date)/
   // 1) get lat/lon and woeid
@@ -69,7 +67,6 @@ $createBtn.click((e) => {
       const startDate = new Date(startDateValue);
       var compareDate = new Date();
       compareDate.setDate(compareDate.getDate() + 5);
-
 
       if (startDate.getTime() > compareDate.getTime()) {
         getHistoricalData(location.woeid, startDate)
@@ -117,7 +114,6 @@ $createBtn.click((e) => {
             }
           });
       } else {
-
         getLocationById(location.woeid)
           .then(function (locationDetails) {
             // console.log(locationDetails)
