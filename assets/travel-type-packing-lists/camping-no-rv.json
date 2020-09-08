@@ -1,0 +1,51 @@
+{
+  "recommended": [
+    "tent",
+    "cooler/food storage",
+    "toiletries",
+    "cookware",
+    "water",
+    "flashlight/lanterns",
+    "plates/bowls/utinsels",
+    "lighters/matchs (fire starter)",
+    "trash bags",
+    "first aid",
+    "food",
+    "sleeping bag or blankets",
+    "knife",
+    "pants",
+    "shirts",
+    "socks",
+    "underwear"
+  ],
+  "optional": [
+    "cooking stove (if not using campfire)",
+    "tarp for under tent",
+    "wood or something to cut wood",
+    "propane (if using propane based items)",
+    "chairs"
+  ],
+  "snow": [
+    "scarf",
+    "gloves",
+    "warm hat",
+    "1 - 2 pair boots/sneakers",
+    "long sleeve shirts",
+    "hand warmers",
+    "insulated sleeping bag or pads",
+    "windproof jacket"
+  ],
+  "rain": [
+    "plastic bags (something to keep items dry)",
+    "rain jacket",
+    "rain pants",
+    "rain boots",
+    "extra tarps"
+  ],
+  "sunny": [
+    "shorts",
+    "sunscreen",
+    "hat",
+    "flip flops"
+  ]
+}
