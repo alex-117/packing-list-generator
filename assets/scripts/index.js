@@ -200,100 +200,14 @@ function packingListDisplay(headerText, listItems) {
 }
 
 
-/**
- * @param queryUrl
- * @returns {Promise<location>}
- */
-const getLocationDetails = (queryUrl) => {
 
-  return $.ajax(queryUrl)
-    .then((response) => {
-      // if no match is found, returns empty []
-      if (!response.length) {
-        throw Error('Empty response');
-      }
-
-      return response[0]; // get first response and hope it's the right one :)
-    })
-    .catch((error) => {
-      // TODO: handle error messages
-      console.log(error);
-    });
-};
-
-/**
- * @param woeid
- * @returns {Promise<T>}
- */
-const getLocationById = (woeid) => {
-  return $.ajax(`${url}/location/${woeid}`)
-    .then((response) => {
-      if (!response) {
-        throw Error('Invalid ID');
-      }
-      return response;
-    })
-    .catch((error) => {
-      // TODO: handle error messages
-      console.log(error);
-    });
-};
-
-/**
- * Gets the packing list from storage
- * @returns {Array<Packing-Item>}
- */
-const getPackingListFromStorage = () => {
-  return JSON.parse(localStorage.getItem('packing-list'))
-}
-
-/**
- * Saves the list to localStorage
- * @param list 
- */
-const savePackingListToStorage = (list) => {
-  localStorage.setItem('packing-list', JSON.stringify(list));
-}
-/**
- * @param woeid
- * @returns {Promise<T>}
- */
-const getHistoricalData = (woeid, date) => {
-  return $.ajax(`${url}/location/${woeid}/${formatHistoricalAPIDate(date)}`)
-    .then((response) => {
-      if (!response) {
-        throw Error('Invalid ID');
-      }
-      return response;
-    })
-    .catch((error) => {
-      // TODO: handle error messages
-      console.log(error);
-    });
-};
-
-/**
- * @param type
- * @returns {Promise<T>}
- */
-const getTravelTypePackingList = (type) => {
-
-  return $.ajax(`/assets/travel-type-packing-lists/${type}.json`)
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
-    .catch((error) => {
-      // TODO: handle error messages
-      console.log(error);
-    });
-};
 
 $(document).ready(() => {
+  setDateVals();
+
   $startDateInput.change(() => {
     // prevent end date from occuring BEFORE start date
     $endDateInput.attr({ min: $startDateInput.val() });
   });
 
-  setDateVals();
 });
