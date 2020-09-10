@@ -16,8 +16,6 @@ const $createBtn = $(`#createBtn`);
 const $packingLists = $(`#packingLists`);
 const $savePackingListBtn = $(`#savePackingListBtn`);
 
-
-
 const setDateVals = () => {
   // set current date as default value for start date
   $startDateInput.val(currentDate());
@@ -133,7 +131,7 @@ function generatePackingListUI(weatherAvgs, weatherConditions) {
 
 $savePackingListBtn.on('click', function (e) {
   e.preventDefault();
-  
+
   const packingList = {};
 
   const $packingItems = $(`input[name="packing-item"]`)

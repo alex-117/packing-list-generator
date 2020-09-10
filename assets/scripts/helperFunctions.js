@@ -34,3 +34,19 @@ function calculateAverage(number, denominator) {
 function convertToFahrenheit(c) {
   return (c * (9 / 5)) + 32
 }
+
+/**
+ * Gets the packing list from storage
+ * @returns {Array<Packing-Item>}
+ */
+function getPackingListFromStorage() {
+  return JSON.parse(localStorage.getItem('packing-list'))
+}
+
+/**
+ * Saves the list to localStorage
+ * @param list 
+ */
+function savePackingListToStorage(list) {
+  localStorage.setItem('packing-list', JSON.stringify(list));
+}
