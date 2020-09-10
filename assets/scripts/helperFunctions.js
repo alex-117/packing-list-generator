@@ -26,3 +26,11 @@ function tomorrowsDate() {
   tomorrow = formatDate(tomorrow);
   return tomorrow;
 }
+
+function calculateAverage(number, denominator) {
+  return number / denominator;
+}
+
+function convertToFahrenheit(c) {
+  return (c * (9 / 5)) + 32
+}
