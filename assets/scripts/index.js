@@ -27,17 +27,6 @@ const setDateVals = () => {
   $endDateInput.attr({ min: currentDate() });
 };
 
-$createBtn.click((e) => {
-  e.preventDefault();
-
-  const queryUrl = `${url}/location/search/?query=${$destinationInput.val()}`;
-
-  handleHistoricalData(data);
-
-  // getLocationDetails(queryUrl)
-  //   .then(handleLocationDetails);
-});
-
 function handleLocationDetails(location) {
   // compare if startDate > 5 days in future 
   const startDate = new Date($startDateInput.val());
@@ -57,7 +46,6 @@ function handleLocationDetails(location) {
   }
 
 }
-
 
 function handleHistoricalData(data) {
   try {
@@ -126,6 +114,7 @@ function generatePackingListUI(weather) {
     });
 }
 
+
 function generateListForLocalStorage() {
   const packingList = {};
 
@@ -146,14 +135,6 @@ function generateListForLocalStorage() {
 
   return packingList;
 }
-
-$savePackingListBtn.on('click', function (e) {
-  e.preventDefault();
-
-  const packingList = generateListForLocalStorage();
-  const listName = prompt(`What would you like to name your new travel list?`);
-  savePackingListToStorage(listName, packingList)
-});
 
 function packingListDisplay(headerText, listItems) {
   try {
@@ -194,6 +175,31 @@ function packingListDisplay(headerText, listItems) {
 
 $(document).ready(() => {
   setDateVals();
+
+  $createBtn.click((e) => {
+    e.preventDefault();
+
+    const queryUrl = `${url}/location/search/?query=${$destinationInput.val()}`;
+
+    handleHistoricalData(data);
+    $packingListForm.show();
+    $formCreate.hide();
+
+    // getLocationDetails(queryUrl)
+    //   .then((response) => {
+    //     $packingListForm.show();
+    //     $formCreate.hide();
+    //     return handleLocationDetails(response);
+    // });
+  });
+
+  $savePackingListBtn.on('click', function (e) {
+    e.preventDefault();
+
+    const packingList = generateListForLocalStorage();
+    const listName = prompt(`What would you like to name your new travel list?`);
+    savePackingListToStorage(listName, packingList)
+  });
 
   $startDateInput.change(() => {
     // prevent end date from occuring BEFORE start date

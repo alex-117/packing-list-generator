@@ -27,7 +27,7 @@
 
     <main>
         <div class="container corner__fold--yellow">
-        <form class="form__create">
+        <form class="form__create" id="form-create">
             <h2>Create a New Packing List</h2>
             <div class="form__fields pure-g">
 
@@ -74,12 +74,17 @@
         </form>
 
 
-        <form class="form__packing-list">
+        <form class="form__packing-list" id="form-new-packing-list">
+            <div class="form__field">
+                <label for="packing-list-name" class="form__field--label">Name your packing list:</label>
+                <input type="text" name="packing-list-name" id="packing-list-name" class="form__field--text" placeholder="" required />
+            </div>
+
             <div class="form__packing-lists-wrap" id="packingLists">
                 
             </div>
-
-            <button id="savePackingListBtn" type="submit">save</button>
+            
+            <button id="savePackingListBtn" type="submit">Save List</button>
         </form>
     </main>
 
