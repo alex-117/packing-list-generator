@@ -4,17 +4,25 @@ const snowConditionAbbr = ['sn', 'sl'];
 const rainConditionAbbr = ['h', 't', 'hr', 'lr', 's'];
 const sunnyConditionAbbr = ['c'];
 
-// create form fields
+// create form
+const $formCreate = $(`#form-create`);
 const $startDateInput = $(`#startDate`);
 const $endDateInput = $(`#endDate`);
 const $destinationInput = $(`#destination`);
 const $typeInput = $(`#type`);
-// create form button
 const $createBtn = $(`#createBtn`);
 
 // packing list form
+const $packingListForm = $('#form-new-packing-list');
 const $packingLists = $(`#packingLists`);
 const $savePackingListBtn = $(`#savePackingListBtn`);
+
+// local storage stored list display
+const $storedListDisplay = $(`#storedListsDisplay`);
+
+// edit form
+const $updatePackingListBtn = $(`#updatePackingListBtn`);
+
 
 const setDateVals = () => {
   // set current date as default value for start date
@@ -38,7 +46,6 @@ function handleLocationDetails(location) {
     getHistoricalData(location.woeid, startDate)
       .then(handleHistoricalData);
   } else {
-
     getLocationById(location.woeid)
       .then(function (locationDetails) {
         // console.log(locationDetails)
@@ -222,29 +229,28 @@ $(document).ready(() => {
 
     const queryUrl = `${url}/location/search/?query=${$destinationInput.val()}`;
 
-    handleHistoricalData(data);
-    $packingListForm.show();
-    $formCreate.hide();
 
-    // getLocationDetails(queryUrl)
-    //   .then((response) => {
-    //     $packingListForm.show();
-    //     $formCreate.hide();
-    //     return handleLocationDetails(response);
-    // });
+    getLocationDetails(queryUrl)
+      .then((response) => {
+        // todo: change where hide/show happens & add error handling if req. fails 
+        $formCreate.hide();
+        $packingListForm.show();
+        return handleLocationDetails(response);
+    });
   });
 
   $savePackingListBtn.on('click', function (e) {
     e.preventDefault();
 
     const packingList = generateListForLocalStorage();
-    const listName = $(`#packing-list-name`).val();
+    const listName = $(`#packing-list-name`).val().trim();
     savePackingListToStorage(listName, packingList);
+    
+    // TODO: add better success handler    
     $(this).text('Success!');
     setTimeout(() => {
       window.location = '/view.html';
-
-    }, 2000);
+    }, 1000);
   });
 
   $startDateInput.change(() => {
@@ -271,7 +277,7 @@ $(document).ready(() => {
 
       const $listEditBtn = $(`<a class="stored-lists__edit-btn">`);
       $listEditBtn.text(`edit`);
-      $listEditBtn.attr(`href`, `/edit.html?listname=${encodeURIComponent(list.name)}`);
+      $listEditBtn.attr(`href`, `/edit.html?listname=${list.name}`);
 
 
       $listContainer.append($listName);
