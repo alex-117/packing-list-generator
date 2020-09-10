@@ -64,3 +64,23 @@ const savePackingListToStorage = (listName, list) => {
 
   localStorage.setItem('packing-list', JSON.stringify(currentPackingList));
 }
+
+/**
+ * Updates a list to localStorage
+ * @param listName 
+ * @param list 
+ */
+const updatesPackingListToStorage = (listName, list) => {
+  const currentPackingList = getPackingListFromStorage();
+  
+  const updatedList = currentPackingList.map((item) => {
+    if (item.name === listName) {
+      return {
+        name: listName,
+        items: list
+      };
+    }
+  });
+
+  localStorage.setItem('packing-list', JSON.stringify(updatedList));
+}

@@ -95,8 +95,7 @@ function handleHistoricalData(data) {
 
 function generateNewPackingList(weather) {
   // take packing list & weather conditions
-  // getTravelTypePackingList($typeInput.val())
-  getTravelTypePackingList('camping-no-rv')
+  getTravelTypePackingList($typeInput.val())
     .then(function (list) {
 
       if (!weather.conditions.rain) delete list.rain;
@@ -248,6 +247,13 @@ $(document).ready(() => {
     $endDateInput.attr({ min: $startDateInput.val() });
   });
 
+  $updatePackingListBtn.on('click', function (e) {
+    e.preventDefault();
+    
+    const updatedPackingList = generateListForLocalStorage();
+    updatesPackingListToStorage($(this).data(`listName`), updatedPackingList)
+  });
+
 
   if (window.location.pathname === `/view.html`) {
     const storedLists = getPackingListFromStorage();
@@ -271,7 +277,6 @@ $(document).ready(() => {
       $listContainer.append($listEditBtn);
 
       $storedListDisplay.append($listContainer);
-      console.log('hit');
     }
   }
 
