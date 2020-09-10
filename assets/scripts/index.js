@@ -32,106 +32,101 @@ $createBtn.click((e) => {
 
   const queryUrl = `${url}/location/search/?query=${$destinationInput.val()}`;
 
+  handleHistoricalData(data);
 
-  getLocationDetails(queryUrl)
-    .then(function (location) {
-      // compare if startDate > 5 days in future 
-      const startDate = new Date($startDateInput.val());
-      const compareDate = new Date();
-      compareDate.setDate(compareDate.getDate() + 5);
-
-
-      if (startDate.getTime() > compareDate.getTime()) {
-        getHistoricalData(location.woeid, startDate)
-          .then(useHistoricalData);
-      } else {
-
-        getLocationById(location.woeid)
-          .then(function (locationDetails) {
-            // console.log(locationDetails)
-          });
-      }
-
-    });
+  // getLocationDetails(queryUrl)
+  //   .then(handleLocationDetails);
 });
 
+function handleLocationDetails(location) {
+  // compare if startDate > 5 days in future 
+  const startDate = new Date($startDateInput.val());
+  const compareDate = new Date();
+  compareDate.setDate(compareDate.getDate() + 5);
 
-function calculateAverage(number, denominator) {
-  return number / denominator;
+
+  if (startDate.getTime() > compareDate.getTime()) {
+    getHistoricalData(location.woeid, startDate)
+      .then(handleHistoricalData);
+  } else {
+
+    getLocationById(location.woeid)
+      .then(function (locationDetails) {
+        // console.log(locationDetails)
+      });
+  }
+
 }
 
-function convertToFahrenheit(c) {
-  return (c * (9 / 5)) + 32
-}
 
-function useHistoricalData(data) {
+function handleHistoricalData(data) {
   try {
+    const weather = {
+      temp: {
+        max: 0,
+        min: 0,
+      },
+      conditions: {
+        rain: false,
+        snow: false,
+        sunny: false
+      }
+    }
 
-    const tempTotals = {
-      max: 0,
-      min: 0,
-    };
+    for (let item of data) {
+      weather.temp.max += item.max_temp;
+      weather.temp.min += item.min_temp;
 
-    const weatherConditions = {
-      rain: false,
-      snow: false,
-      sunny: false
-    };
-
-    data.reduce(function (result, current) {
-
-      result.max += current.max_temp;
-      result.min += current.min_temp;
-
-      if (snowConditionAbbr.includes(current.weather_state_abbr)) {
-        weatherConditions.snow = true;
+      if (snowConditionAbbr.includes(item.weather_state_abbr)) {
+        weather.conditions.snow = true;
       }
 
-      if (rainConditionAbbr.includes(current.weather_state_abbr)) {
-        weatherConditions.rain = true;
+      if (rainConditionAbbr.includes(item.weather_state_abbr)) {
+        weather.conditions.rain = true;
       }
 
-      if (sunnyConditionAbbr.includes(current.weather_state_abbr)) {
-        weatherConditions.sunny = true;
+      if (sunnyConditionAbbr.includes(item.weather_state_abbr)) {
+        weather.conditions.sunny = true;
       }
+    }
 
-      return result;
 
-    }, tempTotals);
+    weather.temp.max = calculateAverage(weather.temp.max, data.length);
+    weather.temp.min = calculateAverage(weather.temp.min, data.length);
 
-    const weatherAvgs = {
-      max: calculateAverage(tempTotals.max, data.length),
-      min: calculateAverage(tempTotals.min, data.length),
-    };
+    weather.temp.max = convertToFahrenheit(weather.temp.max);
+    weather.temp.min = convertToFahrenheit(weather.temp.min);
 
-    weatherAvgs.max = convertToFahrenheit(weatherAvgs.max);
-    weatherAvgs.min = convertToFahrenheit(weatherAvgs.min);
+    weather.temp.max = convertToFahrenheit(weather.temp.max);
+    weather.temp.min = convertToFahrenheit(weather.temp.min);
 
-    generatePackingListUI(weatherAvgs, weatherConditions);
+    generatePackingListUI(weather);
   } catch (e) {
     console.log(e)
   }
 }
 
-function generatePackingListUI(weatherAvgs, weatherConditions) {
+function generatePackingListUI(weather) {
   // take packing list & weather conditions
-  getTravelTypePackingList($typeInput.val())
+  // getTravelTypePackingList($typeInput.val())
+  getTravelTypePackingList('camping-no-rv')
     .then(function (list) {
 
-      if (!weatherConditions.rain) delete list.rain;
-      if (!weatherConditions.snow) delete list.snow;
-      if (!weatherConditions.sunny) delete list.sunny;
+      if (!weather.conditions.rain) delete list.rain;
+      if (!weather.conditions.snow) delete list.snow;
+      if (!weather.conditions.sunny) delete list.sunny;
 
       for (let key in list) {
         packingListDisplay(key, list[key]);
       }
 
+    })
+    .catch(function (error) {
+      console.log(error);
     });
 }
 
-$savePackingListBtn.on('click', function (e) {
-  e.preventDefault();
-
+function generateListForLocalStorage() {
   const packingList = {};
 
   const $packingItems = $(`input[name="packing-item"]`)
@@ -143,23 +138,21 @@ $savePackingListBtn.on('click', function (e) {
     const itemValue = $item.val();
 
     if (!packingList[itemType]) {
-      packingList[itemType] = {
-        checked: [],
-        unchecked: []
-      }
+      packingList[itemType] = []
     }
 
-    if (isItemChecked) {
-      packingList[itemType].checked.push(itemValue);
-    } else {
-      packingList[itemType].unchecked.push(itemValue);
-    }
+    packingList[itemType].push({ checked: isItemChecked, name: itemValue });
   }
 
-  // TODO: save to local storage
-  console.log(packingList);
+  return packingList;
+}
 
+$savePackingListBtn.on('click', function (e) {
+  e.preventDefault();
 
+  const packingList = generateListForLocalStorage();
+  const listName = prompt(`What would you like to name your new travel list?`);
+  savePackingListToStorage(listName, packingList)
 });
 
 function packingListDisplay(headerText, listItems) {
@@ -194,13 +187,10 @@ function packingListDisplay(headerText, listItems) {
       $listWrapper.append($listItem);
 
     }
-  } catch (e) { console.log(e) }
-
-
+  } catch (e) {
+    console.log(e)
+  }
 }
-
-
-
 
 $(document).ready(() => {
   setDateVals();

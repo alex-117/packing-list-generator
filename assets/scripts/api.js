@@ -61,10 +61,8 @@ function getHistoricalData(woeid, date) {
  * @returns {Promise<T>}
  */
 function getTravelTypePackingList(type) {
-
   return $.ajax(`/assets/travel-type-packing-lists/${type}.json`)
     .then((response) => {
-      console.log(response);
       return response;
     })
     .catch((error) => {

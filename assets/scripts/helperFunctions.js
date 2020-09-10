@@ -39,14 +39,28 @@ function convertToFahrenheit(c) {
  * Gets the packing list from storage
  * @returns {Array<Packing-Item>}
  */
-function getPackingListFromStorage() {
-  return JSON.parse(localStorage.getItem('packing-list'))
+const getPackingListFromStorage = () => {
+  const storagePackingList = localStorage.getItem('packing-list');
+
+  if (storagePackingList) {
+    return JSON.parse(localStorage.getItem('packing-list'))
+  }
+
+  return [];
 }
+
 
 /**
  * Saves the list to localStorage
- * @param list 
+ * @param listName
+ * @param list
  */
-function savePackingListToStorage(list) {
-  localStorage.setItem('packing-list', JSON.stringify(list));
+const savePackingListToStorage = (listName, list) => {
+  const currentPackingList = getPackingListFromStorage();
+  currentPackingList.push({
+    name: listName,
+    items: list
+  });
+
+  localStorage.setItem('packing-list', JSON.stringify(currentPackingList));
 }
