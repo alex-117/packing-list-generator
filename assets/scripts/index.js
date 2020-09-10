@@ -38,18 +38,18 @@ const setDateVals = () => {
 function handleLocationDetails(location) {
   // compare if startDate > 5 days in future 
   const startDate = new Date($startDateInput.val());
-  const compareDate = new Date();
-  compareDate.setDate(compareDate.getDate() + 5);
+  // const compareDate = new Date();
+  // compareDate.setDate(compareDate.getDate() + 5);
 
+  getHistoricalData(location.woeid, startDate)
+    .then(handleHistoricalData);
 
   if (startDate.getTime() > compareDate.getTime()) {
-    getHistoricalData(location.woeid, startDate)
-      .then(handleHistoricalData);
   } else {
-    getLocationById(location.woeid)
-      .then(function (locationDetails) {
-        // console.log(locationDetails)
-      });
+    // getLocationById(location.woeid)
+    //   .then(function (locationDetails) {
+    //     // console.log(locationDetails)
+    //   });
   }
 }
 
@@ -224,19 +224,27 @@ function editPackingListDisplay(list) {
 $(document).ready(() => {
   setDateVals();
 
+  $('#nav-menu-btn').on('click', function (e) {
+    $('#nav-menu-list').toggle('show');
+  });
+
   $createBtn.click((e) => {
     e.preventDefault();
 
-    const queryUrl = `${url}/location/search/?query=${$destinationInput.val()}`;
+    const destVal = $destinationInput.val().trim();
+    const travelVal = $typeInput.val().trim();
 
+    if (destVal && travelVal) {
+      const queryUrl = `${url}/location/search/?query=${destVal}`;
 
-    getLocationDetails(queryUrl)
-      .then((response) => {
-        // todo: change where hide/show happens & add error handling if req. fails 
-        $formCreate.hide();
-        $packingListForm.show();
-        return handleLocationDetails(response);
-    });
+      getLocationDetails(queryUrl)
+        .then((response) => {
+          // todo: change where hide/show happens & add error handling if req. fails 
+          $formCreate.hide();
+          $packingListForm.show();
+          return handleLocationDetails(response);
+        });
+    }
   });
 
   $savePackingListBtn.on('click', function (e) {
@@ -245,7 +253,7 @@ $(document).ready(() => {
     const packingList = generateListForLocalStorage();
     const listName = $(`#packing-list-name`).val().trim();
     savePackingListToStorage(listName, packingList);
-    
+
     // TODO: add better success handler    
     $(this).text('Success!');
     setTimeout(() => {
@@ -269,21 +277,25 @@ $(document).ready(() => {
   if (window.location.pathname === `/view.html`) {
     const storedLists = getPackingListFromStorage();
 
-    for (let list of storedLists) {
-      const $listContainer = $(`<div class="stored-lists__list pure-u-1 pure-u-sm-1-2 pure-u-md-1-3">`);
+    if (storedLists.length) {
+      for (let list of storedLists) {
+        const $listContainer = $(`<div class="stored-lists__list pure-u-1 pure-u-sm-1-2 pure-u-md-1-3">`);
 
-      const $listName = $(`<h2 class="stored-lists__list-name">`);
-      $listName.text(list.name);
+        const $listName = $(`<h2 class="stored-lists__list-name">`);
+        $listName.text(list.name);
 
-      const $listEditBtn = $(`<a class="stored-lists__edit-btn">`);
-      $listEditBtn.text(`edit`);
-      $listEditBtn.attr(`href`, `/edit.html?listname=${list.name}`);
+        const $listEditBtn = $(`<a class="stored-lists__edit-btn">`);
+        $listEditBtn.text(`edit`);
+        $listEditBtn.attr(`href`, `/edit.html?listname=${list.name}`);
 
 
-      $listContainer.append($listName);
-      $listContainer.append($listEditBtn);
+        $listContainer.append($listName);
+        $listContainer.append($listEditBtn);
 
-      $storedListDisplay.append($listContainer);
+        $storedListDisplay.append($listContainer);
+      }
+    } else {
+      $('#stored-list-header').text(`You have no saved lists...`);
     }
   }
 

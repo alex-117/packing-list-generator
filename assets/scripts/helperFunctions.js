@@ -59,7 +59,7 @@ const savePackingListToStorage = (listName, list) => {
   const currentPackingList = getPackingListFromStorage();
   currentPackingList.push({
     name: listName,
-    items: list
+    items: list,
   });
 
   localStorage.setItem('packing-list', JSON.stringify(currentPackingList));
