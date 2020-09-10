@@ -191,26 +191,26 @@ function packingListDisplay(headerText, listItems) {
 
 function editPackingListDisplay(list) {
   try {
-      const $editPackingListName = $(`#edit-packing-list-name`);
-      $editPackingListName.val(list.name);
+    const $editPackingListName = $(`#edit-packing-list-name`);
+    $editPackingListName.val(list.name);
 
-      for (let category in list.items) {
-        const packingItems = list.items[category];
+    for (let category in list.items) {
+      const packingItems = list.items[category];
 
-        const $listHeader = $(`<h3 class="form_packing-list-header">`);
-        $listHeader.text(category);
+      const $listHeader = $(`<h3 class="form_packing-list-header">`);
+      $listHeader.text(category);
 
-        const $listWrapper = $(`<ul class="form__packing-list">`);
+      const $listWrapper = $(`<ul class="form__packing-list">`);
 
-        $packingLists.append($listHeader);
-        $packingLists.append($listWrapper);
+      $packingLists.append($listHeader);
+      $packingLists.append($listWrapper);
 
-        for (let packingItem of packingItems) {
-          const newListItem = packingListItem(packingItem, category);
-          $listWrapper.append(newListItem);
-        }
-
+      for (let packingItem of packingItems) {
+        const newListItem = packingListItem(packingItem, category);
+        $listWrapper.append(newListItem);
       }
+
+    }
   } catch (e) { console.log(e) }
 }
 
@@ -239,7 +239,12 @@ $(document).ready(() => {
 
     const packingList = generateListForLocalStorage();
     const listName = $(`#packing-list-name`).val();
-    savePackingListToStorage(listName, packingList)
+    savePackingListToStorage(listName, packingList);
+    $(this).text('Success!');
+    setTimeout(() => {
+      window.location = '/view.html';
+
+    }, 2000);
   });
 
   $startDateInput.change(() => {
@@ -249,7 +254,7 @@ $(document).ready(() => {
 
   $updatePackingListBtn.on('click', function (e) {
     e.preventDefault();
-    
+
     const updatedPackingList = generateListForLocalStorage();
     updatesPackingListToStorage($(this).data(`listName`), updatedPackingList)
   });
@@ -259,13 +264,10 @@ $(document).ready(() => {
     const storedLists = getPackingListFromStorage();
 
     for (let list of storedLists) {
-      const $listContainer = $(`<div class="stored-lists__list">`);
+      const $listContainer = $(`<div class="stored-lists__list pure-u-1 pure-u-sm-1-2 pure-u-md-1-3">`);
 
       const $listName = $(`<h2 class="stored-lists__list-name">`);
       $listName.text(list.name);
-
-      const $listQuantityPacked = $(`<span class="stored-lists__list-quantity">`);
-      $listQuantityPacked.text(`x / y items packed`);
 
       const $listEditBtn = $(`<a class="stored-lists__edit-btn">`);
       $listEditBtn.text(`edit`);
@@ -273,7 +275,6 @@ $(document).ready(() => {
 
 
       $listContainer.append($listName);
-      $listContainer.append($listQuantityPacked);
       $listContainer.append($listEditBtn);
 
       $storedListDisplay.append($listContainer);

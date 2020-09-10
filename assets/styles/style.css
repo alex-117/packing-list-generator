@@ -259,16 +259,17 @@ form.form__packing-list {
 
 /* Landing ******************************/
 .jumbotron {
-  background-color: yellow;
-  border: 3px solid yellow;
+  background-color: var(--color-light-yellow);
+  border: 3px solid var(--color-light-yellow);
   border-radius: 3px;
-  margin: 25px 5px;
+  margin: 25px auto;
+  max-width: 720px;
   padding: .8rem;
 }
 
 .jumbotron__header {
   text-decoration: underline;
-  text-decoration-color: gray;
+  text-decoration-color: var(--color-med-gray);
 }
 
 .jumbotron__main-text {
@@ -277,27 +278,32 @@ form.form__packing-list {
 }
 
 .jumbotron__action-btn {
-  background-color: blue;
-  border: none;
-  border-radius: 3px;
-  color: white;
+    padding: 1rem;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  height: calc(100% - 4px);
+  border: 0;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-dark-blue);
+  color: var(--color-near-white);
+  box-shadow: var(--color-darker-blue) 0 4px 0 0;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: .5px;
-  padding: 1rem;
-  outline: none;
-  transition: 0.2s;
+  transition: all 0.2s;
 }
 
-.jumbotron__action-btn:hover {
-  background-color: blue;
+.jumbotron__action-btn:hover,
+.jumbotron__action-btn:focus {
+  outline: 0;
+  background-color: var(--color-darker-blue);
+  box-shadow: var(--color-near-black) 0 2px 0 0;
+  transform: translateY(2px);
 }
 
 .hyperlinks__link-wrap {
   align-items: center;
-  border: 3px solid blue;
-  border-radius: 3px;
+  border: 3px solid var(--color-darker-blue);
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
   display: flex;
   flex-flow: column;
@@ -307,18 +313,17 @@ form.form__packing-list {
 }
 
 .hyperlinks__link-wrap:hover {
-  opacity: 0.6;
-}
-
-.hyperlinks__link-img {
-  background: url('../images/to-do-list.png') center center no-repeat;
-  background-size: cover;
-  height: 4rem;
-  margin-bottom: 0.5rem;
-  width: 4rem;
+  border-color: var(--color-med-blue);
 }
 
 .hyperlinks__link {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   text-decoration: none;
+}
+
+
+/* Edit ******************************/
+.form__edit-packing-list {
+  max-width: 720px;
+  margin: 0 auto;
 }
