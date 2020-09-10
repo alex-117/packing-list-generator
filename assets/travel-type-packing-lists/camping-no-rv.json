@@ -1,51 +1,168 @@
 {
   "recommended": [
-    "tent",
-    "cooler/food storage",
-    "toiletries",
-    "cookware",
-    "water",
-    "flashlight/lanterns",
-    "plates/bowls/utinsels",
-    "lighters/matchs (fire starter)",
-    "trash bags",
-    "first aid",
-    "food",
-    "sleeping bag or blankets",
-    "knife",
-    "pants",
-    "shirts",
-    "socks",
-    "underwear"
+    {
+      "name": "tent",
+      "checked": false
+    },
+    {
+      "name": "cooler/food storage",
+      "checked": false
+    },
+    {
+      "name": "toiletries",
+      "checked": false
+    },
+    {
+      "name": "cookware",
+      "checked": false
+    },
+    {
+      "name": "water",
+      "checked": false
+    },
+    {
+      "name": "flashlight/lanterns",
+      "checked": false
+    },
+    {
+      "name": "plates/bowls/utinsels",
+      "checked": false
+    },
+    {
+      "name": "lighters/matchs (fire starter)",
+      "checked": false
+    },
+    {
+      "name": "trash bags",
+      "checked": false
+    },
+    {
+      "name": "first aid",
+      "checked": false
+    },
+    {
+      "name": "food",
+      "checked": false
+    },
+    {
+      "name": "sleeping bag or blankets",
+      "checked": false
+    },
+    {
+      "name": "knife",
+      "checked": false
+    },
+    {
+      "name": "pants",
+      "checked": false
+    },
+    {
+      "name": "shirts",
+      "checked": false
+    },
+    {
+      "name": "socks",
+      "checked": false
+    },
+    {
+      "name": "underwear",
+      "checked": false
+    }
   ],
   "optional": [
-    "cooking stove (if not using campfire)",
-    "tarp for under tent",
-    "wood or something to cut wood",
-    "propane (if using propane based items)",
-    "chairs"
+    {
+      "name": "cooking stove (if not using campfire)",
+      "checked": false
+    },
+    {
+      "name": "tarp for under tent",
+      "checked": false
+    },
+    {
+      "name": "wood or something to cut wood",
+      "checked": false
+    },
+    {
+      "name": "propane (if using propane based names)",
+      "checked": false
+    },
+    {
+      "name": "chairs",
+      "checked": false
+    }
   ],
   "snow": [
-    "scarf",
-    "gloves",
-    "warm hat",
-    "1 - 2 pair boots/sneakers",
-    "long sleeve shirts",
-    "hand warmers",
-    "insulated sleeping bag or pads",
-    "windproof jacket"
+    {
+      "name": "scarf",
+      "checked": false
+    },
+    {
+      "name": "gloves",
+      "checked": false
+    },
+    {
+      "name": "warm hat",
+      "checked": false
+    },
+    {
+      "name": "1 - 2 pair boots/sneakers",
+      "checked": false
+    },
+    {
+      "name": "long sleeve shirts",
+      "checked": false
+    },
+    {
+      "name": "hand warmers",
+      "checked": false
+    },
+    {
+      "name": "insulated sleeping bag or pads",
+      "checked": false
+    },
+    {
+      "name": "windproof jacket",
+      "checked": false
+    }
   ],
   "rain": [
-    "plastic bags (something to keep items dry)",
-    "rain jacket",
-    "rain pants",
-    "rain boots",
-    "extra tarps"
+    {
+      "name": "plastic bags (something to keep names dry)",
+      "checked": false
+    },
+    {
+      "name": "rain jacket",
+      "checked": false
+    },
+    {
+      "name": "rain pants",
+      "checked": false
+    },
+    {
+      "name": "rain boots",
+      "checked": false
+    },
+    {
+      "name": "extra tarps",
+      "checked": false
+    }    
   ],
   "sunny": [
-    "shorts",
-    "sunscreen",
-    "hat",
-    "flip flops"
+    {
+      "name": "shorts",
+      "checked": false
+    },
+    {
+      "name": "sunscreen",
+      "checked": false
+    },
+    {
+      "name": "hat",
+      "checked": false
+    },
+    {
+      "name": "flip flops",
+      "checked": false
+    }
   ]
 }

@@ -4,46 +4,25 @@ const snowConditionAbbr = ['sn', 'sl'];
 const rainConditionAbbr = ['h', 't', 'hr', 'lr', 's'];
 const sunnyConditionAbbr = ['c'];
 
-// create form fields
+// create form
+const $formCreate = $(`#form-create`);
 const $startDateInput = $(`#startDate`);
 const $endDateInput = $(`#endDate`);
 const $destinationInput = $(`#destination`);
 const $typeInput = $(`#type`);
-// create form button
 const $createBtn = $(`#createBtn`);
 
 // packing list form
+const $packingListForm = $('#form-new-packing-list');
 const $packingLists = $(`#packingLists`);
 const $savePackingListBtn = $(`#savePackingListBtn`);
 
-// style date objects for input vals and mins
-const formatDate = (date) => {
-  const dd = String(date.getDate()).padStart(2, `0`);
-  const mm = String(date.getMonth() + 1).padStart(2, `0`);
-  const yyyy = date.getFullYear();
-  return `${yyyy}-${mm}-${dd}`;
-};
+// local storage stored list display
+const $storedListDisplay = $(`#storedListsDisplay`);
 
-const formatHistoricalAPIDate = (date) => {
-  const dd = String(date.getDate());
-  const mm = String(date.getMonth() + 1);
-  const yyyy = date.getFullYear() - 1;
-  return `${yyyy}/${mm}/${dd}`;
+// edit form
+const $updatePackingListBtn = $(`#updatePackingListBtn`);
 
-};
-
-const currentDate = () => {
-  const today = formatDate(new Date());
-  return today;
-};
-
-const tomorrowsDate = () => {
-  const today = new Date();
-  let tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow = formatDate(tomorrow);
-  return tomorrow;
-};
 
 const setDateVals = () => {
   // set current date as default value for start date
@@ -56,111 +35,106 @@ const setDateVals = () => {
   $endDateInput.attr({ min: currentDate() });
 };
 
-$createBtn.click((e) => {
-  e.preventDefault();
-
-  const queryUrl = `${url}/location/search/?query=${$destinationInput.val()}`;
-
-
-  getLocationDetails(queryUrl)
-    .then(function (location) {
-      // compare if startDate > 5 days in future 
-      const startDate = new Date($startDateInput.val());
-      const compareDate = new Date();
-      compareDate.setDate(compareDate.getDate() + 5);
+function handleLocationDetails(location) {
+  // compare if startDate > 5 days in future 
+  const startDate = new Date($startDateInput.val());
+  const compareDate = new Date();
+  compareDate.setDate(compareDate.getDate() + 5);
 
 
-      if (startDate.getTime() > compareDate.getTime()) {
-        getHistoricalData(location.woeid, startDate)
-          .then(useHistoricalData);
-      } else {
-
-        getLocationById(location.woeid)
-          .then(function (locationDetails) {
-            // console.log(locationDetails)
-          });
-      }
-
-    });
-});
-
-
-function calculateAverage(number, denominator) {
-  return number / denominator;
+  if (startDate.getTime() > compareDate.getTime()) {
+    getHistoricalData(location.woeid, startDate)
+      .then(handleHistoricalData);
+  } else {
+    getLocationById(location.woeid)
+      .then(function (locationDetails) {
+        // console.log(locationDetails)
+      });
+  }
 }
 
-function convertToFahrenheit(c) {
-  return (c * (9 / 5)) + 32
-}
-
-function useHistoricalData(data) {
+function handleHistoricalData(data) {
   try {
+    const weather = {
+      temp: {
+        max: 0,
+        min: 0,
+      },
+      conditions: {
+        rain: false,
+        snow: false,
+        sunny: false
+      }
+    }
 
-    const tempTotals = {
-      max: 0,
-      min: 0,
-    };
+    for (let item of data) {
+      weather.temp.max += item.max_temp;
+      weather.temp.min += item.min_temp;
 
-    const weatherConditions = {
-      rain: false,
-      snow: false,
-      sunny: false
-    };
-
-    data.reduce(function (result, current) {
-
-      result.max += current.max_temp;
-      result.min += current.min_temp;
-
-      if (snowConditionAbbr.includes(current.weather_state_abbr)) {
-        weatherConditions.snow = true;
+      if (snowConditionAbbr.includes(item.weather_state_abbr)) {
+        weather.conditions.snow = true;
       }
 
-      if (rainConditionAbbr.includes(current.weather_state_abbr)) {
-        weatherConditions.rain = true;
+      if (rainConditionAbbr.includes(item.weather_state_abbr)) {
+        weather.conditions.rain = true;
       }
 
-      if (sunnyConditionAbbr.includes(current.weather_state_abbr)) {
-        weatherConditions.sunny = true;
+      if (sunnyConditionAbbr.includes(item.weather_state_abbr)) {
+        weather.conditions.sunny = true;
       }
+    }
 
-      return result;
 
-    }, tempTotals);
+    weather.temp.max = calculateAverage(weather.temp.max, data.length);
+    weather.temp.min = calculateAverage(weather.temp.min, data.length);
 
-    const weatherAvgs = {
-      max: calculateAverage(tempTotals.max, data.length),
-      min: calculateAverage(tempTotals.min, data.length),
-    };
+    weather.temp.max = convertToFahrenheit(weather.temp.max);
+    weather.temp.min = convertToFahrenheit(weather.temp.min);
 
-    weatherAvgs.max = convertToFahrenheit(weatherAvgs.max);
-    weatherAvgs.min = convertToFahrenheit(weatherAvgs.min);
+    weather.temp.max = convertToFahrenheit(weather.temp.max);
+    weather.temp.min = convertToFahrenheit(weather.temp.min);
 
-    generatePackingListUI(weatherAvgs, weatherConditions);
+    generateNewPackingList(weather);
   } catch (e) {
     console.log(e)
   }
 }
 
-function generatePackingListUI(weatherAvgs, weatherConditions) {
+function generateNewPackingList(weather) {
   // take packing list & weather conditions
   getTravelTypePackingList($typeInput.val())
     .then(function (list) {
 
-      if (!weatherConditions.rain) delete list.rain;
-      if (!weatherConditions.snow) delete list.snow;
-      if (!weatherConditions.sunny) delete list.sunny;
+      if (!weather.conditions.rain) delete list.rain;
+      if (!weather.conditions.snow) delete list.snow;
+      if (!weather.conditions.sunny) delete list.sunny;
 
-      for (let key in list) {
-        packingListDisplay(key, list[key]);
+      for (let category in list) {
+        const packingItems = list[category];
+
+        const $listHeader = $(`<h3 class="form_packing-list-header">`);
+        $listHeader.text(category);
+
+        const $listWrapper = $(`<ul class="form__packing-list">`);
+
+        $packingLists.append($listHeader);
+        $packingLists.append($listWrapper);
+
+        for (let packingItem of packingItems) {
+          const newListItem = packingListItem(packingItem, category);
+          $listWrapper.append(newListItem);
+        }
+
       }
 
+    })
+    .catch(function (error) {
+      console.log(error);
     });
 }
 
-$savePackingListBtn.on('click', function (e) {
-  e.preventDefault();
-  
+
+function generateListForLocalStorage() {
   const packingList = {};
 
   const $packingItems = $(`input[name="packing-item"]`)
@@ -172,24 +146,35 @@ $savePackingListBtn.on('click', function (e) {
     const itemValue = $item.val();
 
     if (!packingList[itemType]) {
-      packingList[itemType] = {
-        checked: [],
-        unchecked: []
-      }
+      packingList[itemType] = []
     }
 
-    if (isItemChecked) {
-      packingList[itemType].checked.push(itemValue);
-    } else {
-      packingList[itemType].unchecked.push(itemValue);
-    }
+    packingList[itemType].push({ checked: isItemChecked, name: itemValue });
   }
 
-  // TODO: save to local storage
-  console.log(packingList);
+  return packingList;
+}
+
+function packingListItem(item, category) {
+  const $listItem = $(`<li class="form__packing-list-item">`);
+  const $itemLabel = $(`<label class="form__list-item-label" />`);
+  const $itemCheckbox = $(`<input class="form__list-item-checkbox" />`);
+
+  $itemLabel.attr(`for`, `${category}-${item.name}`);
+  $itemLabel.text(item.name);
+
+  $itemCheckbox.data(`type`, `${category}`);
+  $itemCheckbox.attr(`id`, `${category}-${item.name}`);
+  $itemCheckbox.attr(`name`, `packing-item`);
+  $itemCheckbox.attr(`type`, `checkbox`);
+  $itemCheckbox.prop(`checked`, item.checked);
+  $itemCheckbox.val(item.name);
 
 
-});
+  $listItem.append($itemCheckbox);
+  $listItem.append($itemLabel);
+  return $listItem;
+}
 
 function packingListDisplay(headerText, listItems) {
   try {
@@ -203,126 +188,119 @@ function packingListDisplay(headerText, listItems) {
     $packingLists.append($listWrapper);
 
     for (let i = 0; i < listItems.length; i++) {
-      const item = listItems[i];
-      const $listItem = $(`<li class="form__packing-list-item">`);
-      const $itemLabel = $(`<label class="form__list-item-label" />`);
-      const $itemCheckbox = $(`<input class="form__list-item-checkbox" />`);
+      const packingItem = packingListItem(listItems[i]);
+      $listWrapper.append(packingItem);
+    }
+  } catch (e) {
+    console.log(e)
+  }
+}
 
-      $itemLabel.attr(`for`, `${headerText}-${i}`);
-      $itemLabel.text(item);
+function editPackingListDisplay(list) {
+  try {
+    const $editPackingListName = $(`#edit-packing-list-name`);
+    $editPackingListName.val(list.name);
 
-      $itemCheckbox.data(`type`, `${headerText}`);
-      $itemCheckbox.attr(`id`, `${headerText}-${i}`);
-      $itemCheckbox.attr(`name`, `packing-item`);
-      $itemCheckbox.attr(`type`, `checkbox`);
-      $itemCheckbox.val(item);
+    for (let category in list.items) {
+      const packingItems = list.items[category];
 
+      const $listHeader = $(`<h3 class="form_packing-list-header">`);
+      $listHeader.text(category);
 
-      $listItem.append($itemCheckbox);
-      $listItem.append($itemLabel);
-      $listWrapper.append($listItem);
+      const $listWrapper = $(`<ul class="form__packing-list">`);
+
+      $packingLists.append($listHeader);
+      $packingLists.append($listWrapper);
+
+      for (let packingItem of packingItems) {
+        const newListItem = packingListItem(packingItem, category);
+        $listWrapper.append(newListItem);
+      }
 
     }
   } catch (e) { console.log(e) }
-
-
 }
-
-
-/**
- * @param queryUrl
- * @returns {Promise<location>}
- */
-const getLocationDetails = (queryUrl) => {
-
-  return $.ajax(queryUrl)
-    .then((response) => {
-      // if no match is found, returns empty []
-      if (!response.length) {
-        throw Error('Empty response');
-      }
-
-      return response[0]; // get first response and hope it's the right one :)
-    })
-    .catch((error) => {
-      // TODO: handle error messages
-      console.log(error);
-    });
-};
-
-/**
- * @param woeid
- * @returns {Promise<T>}
- */
-const getLocationById = (woeid) => {
-  return $.ajax(`${url}/location/${woeid}`)
-    .then((response) => {
-      if (!response) {
-        throw Error('Invalid ID');
-      }
-      return response;
-    })
-    .catch((error) => {
-      // TODO: handle error messages
-      console.log(error);
-    });
-};
-
-/**
- * Gets the packing list from storage
- * @returns {Array<Packing-Item>}
- */
-const getPackingListFromStorage = () => {
-  return JSON.parse(localStorage.getItem('packing-list'))
-}
-
-/**
- * Saves the list to localStorage
- * @param list 
- */
-const savePackingListToStorage = (list) => {
-  localStorage.setItem('packing-list', JSON.stringify(list));
-}
-/**
- * @param woeid
- * @returns {Promise<T>}
- */
-const getHistoricalData = (woeid, date) => {
-  return $.ajax(`${url}/location/${woeid}/${formatHistoricalAPIDate(date)}`)
-    .then((response) => {
-      if (!response) {
-        throw Error('Invalid ID');
-      }
-      return response;
-    })
-    .catch((error) => {
-      // TODO: handle error messages
-      console.log(error);
-    });
-};
-
-/**
- * @param type
- * @returns {Promise<T>}
- */
-const getTravelTypePackingList = (type) => {
-
-  return $.ajax(`/assets/travel-type-packing-lists/${type}.json`)
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
-    .catch((error) => {
-      // TODO: handle error messages
-      console.log(error);
-    });
-};
 
 $(document).ready(() => {
+  setDateVals();
+
+  $createBtn.click((e) => {
+    e.preventDefault();
+
+    const queryUrl = `${url}/location/search/?query=${$destinationInput.val()}`;
+
+
+    getLocationDetails(queryUrl)
+      .then((response) => {
+        // todo: change where hide/show happens & add error handling if req. fails 
+        $formCreate.hide();
+        $packingListForm.show();
+        return handleLocationDetails(response);
+    });
+  });
+
+  $savePackingListBtn.on('click', function (e) {
+    e.preventDefault();
+
+    const packingList = generateListForLocalStorage();
+    const listName = $(`#packing-list-name`).val().trim();
+    savePackingListToStorage(listName, packingList);
+    
+    // TODO: add better success handler    
+    $(this).text('Success!');
+    setTimeout(() => {
+      window.location = '/view.html';
+    }, 1000);
+  });
+
   $startDateInput.change(() => {
     // prevent end date from occuring BEFORE start date
     $endDateInput.attr({ min: $startDateInput.val() });
   });
 
-  setDateVals();
+  $updatePackingListBtn.on('click', function (e) {
+    e.preventDefault();
+
+    const updatedPackingList = generateListForLocalStorage();
+    updatesPackingListToStorage($(this).data(`listName`), updatedPackingList)
+  });
+
+
+  if (window.location.pathname === `/view.html`) {
+    const storedLists = getPackingListFromStorage();
+
+    for (let list of storedLists) {
+      const $listContainer = $(`<div class="stored-lists__list pure-u-1 pure-u-sm-1-2 pure-u-md-1-3">`);
+
+      const $listName = $(`<h2 class="stored-lists__list-name">`);
+      $listName.text(list.name);
+
+      const $listEditBtn = $(`<a class="stored-lists__edit-btn">`);
+      $listEditBtn.text(`edit`);
+      $listEditBtn.attr(`href`, `/edit.html?listname=${list.name}`);
+
+
+      $listContainer.append($listName);
+      $listContainer.append($listEditBtn);
+
+      $storedListDisplay.append($listContainer);
+    }
+  }
+
+  if (window.location.pathname === `/edit.html`) {
+    const storedLists = getPackingListFromStorage();
+    const urlParams = new URLSearchParams(window.location.search);
+    const listNameParam = urlParams.get('listname');
+
+
+    const listToEdit = storedLists.find(function (list) {
+      return list.name === listNameParam;
+    });
+
+    $updatePackingListBtn.data(`listName`, listToEdit.name);
+
+    editPackingListDisplay(listToEdit);
+    $packingListForm.show();
+  }
+
 });
