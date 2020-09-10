@@ -251,6 +251,12 @@ form.form__create .form__fields .btn__submit:focus {
   transform: translateY(2px);
 }
 
+form.form__packing-list {
+  display: none;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
 /* Landing ******************************/
 .jumbotron {
   background-color: yellow;
